@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<title>EcoHuella - Resultado Transporte</title>
+
+<style>
+    /* Animación para el enlace de recomendaciones */
+    .recomendaciones-link {
+    color: #0EB07C;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+      animation: pulse 2s infinite; /* Animación de pulso */
+    }
+    .recomendaciones-link:hover {
+    color: #EB8028;
+    transform: scale(1.05);
+    }
+    @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+    }
+</style>
+
+
+</head>
+<body>
+<header class="header">
+    <div class="header__text">
+    <h1>Descubre tu Huella de Carbono con EcoHuella</h1>
+    <p>¡Calcula, reduce y salva el planeta! Responde preguntas simples sobre tu estilo de vida y obtén consejos personalizados para un futuro sostenible.</p>
+    </div>
+</header>
+<main>
+    {% block content %}
+    <h2 class="main__title main__title--margin">Tu huella de carbono en transporte:</h2>
+    <div class="main__rez" id="end">
+        {%if impacto == "bajo"%}
+        <img class="rez__img" src="{{ url_for('static', filename='img/planet_good.svg') }}" alt="">
+        <span>Tu impacto es {{ impacto }}</span>
+        <span>¡Excelente! Tu huella en transporte es baja. Sigue usando bici, transporte público o carpooling.</span>
+        {%elif impacto == "medio"%}
+        <img class="rez__img" src="{{ url_for('static', filename='img/planet_medium.svg') }}" alt="">
+        <span>Tu impacto es {{ impacto }}</span>
+        <span>Tu huella en transporte es media. Intenta reducir viajes en carro o compartir más.</span>
+        {%elif impacto == "alto"%}
+        <img class="rez__img" src="{{ url_for('static', filename='img/planet_bad.svg') }}" alt="">
+        <span>Tu impacto es {{ impacto }}</span>
+        <span>¡Tu huella de carbono en transporte es alta! 
+            <a class="recomendaciones-link" onclick="reproducirRecomendaciones('{{ impacto }}')">Escuchar Recomendaciones Personalizadas.</a></span>
+        {%endif%}
+    </div>
+    <a href="/" class="main__link">Volver al inicio</a>
+    {% endblock %}
+</main>
+<footer></footer>
+
+<script>
+    // Función para reproducir recomendaciones personalizadas
+    function reproducirRecomendaciones(impacto) {
+        const synth = window.speechSynthesis;
+        let mensaje = "";
+    
+        if (impacto === 'bajo') {
+        mensaje = "Hola, soy tu asistente de EcoHuella. ¡Felicidades! Tu huella en transporte es baja, lo que significa que ya estás contribuyendo mucho al planeta. Sigue caminando o usando la bici en rutas más largas para mantenerte en forma, comparte tus tips sostenibles con amigos para inspirarlos, considera apps de carpooling para viajes ocasionales y reduce aún más emisiones, monitorea tus kilómetros mensuales y celebra cada logro. ¡Eres un ejemplo de movilidad verde!";
+    } else if (impacto === 'medio') {
+        mensaje = "Hola, soy tu asistente de EcoHuella. Tu huella en transporte es media, lo cual es un buen punto de partida. Reduce viajes en carro privado optando por transporte público diario, únete a grupos de carpooling para trayectos largos y ahorra combustible, camina o usa bici para distancias cortas como ir al supermercado, planifica rutas eficientes para minimizar tiempo y emisiones, e involucra a tu familia en hábitos compartidos. ¡Pequeños cambios suman!";
+    } else if (impacto === 'alto') {
+        mensaje = "Hola, soy tu asistente de EcoHuella. Tu huella en transporte es alta, pero no te preocupes, podemos mejorarla juntos. Cambia a transporte público o bici para la mayoría de tus desplazamientos, evita viajes innecesarios combinando tareas en un solo trayecto, considera vehículos eléctricos o híbridos para reducir emisiones, únete a comunidades locales de movilidad sostenible para apoyo, y establece metas semanales para disminuir el uso del carro personal. ¡Cada paso cuenta para un futuro más verde!";
+    }
+
+    // Configurar y reproducir
+    const voices = synth.getVoices();
+    let selectedVoice = voices.find(voice => voice.lang === 'es-ES' && voice.name.includes('Female'));
+    if (!selectedVoice) selectedVoice = voices.find(voice => voice.lang === 'es-ES');
+
+    const utterance = new SpeechSynthesisUtterance(mensaje);
+    utterance.voice = selectedVoice;
+    utterance.rate = 1;
+    utterance.pitch = 1.1;
+    utterance.volume = 1;
+
+    synth.speak(utterance);
+}
+
+{
+      // Reproducir cada recomendación con pausa
+    let index = 0;
+    function hablar() {
+        if (index < recomendaciones.length) {
+            const utterance = new SpeechSynthesisUtterance(recomendaciones[index]);
+            utterance.lang = 'es-ES'; // Español
+            utterance.rate = 0.8; // Velocidad
+            synth.speak(utterance);
+            utterance.onend = () => {
+                setTimeout(hablar, 1000); // Pausa de 1 segundo
+                index++;
+            };
+        }
+    }
+        hablar();
+    }
+</script>
+
+
+</body>
+</html>

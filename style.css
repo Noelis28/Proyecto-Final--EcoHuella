@@ -1,0 +1,528 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+/* Pantalla de bienvenida: fondo ecológico y futurista */
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-image: url("../img/fondo.jpg"); /* imagen como fondo */
+    background-size: cover; /* Cubre toda la pantalla */
+    background-position: center; /* Centrada */
+    background-repeat: no-repeat; /* Sin repetir */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* Quita el gradiente y animación para que sea solo la imagen */
+}
+
+.welcome-img {
+    max-width: 80%; /* Ajusta tamaño */
+    max-height: 80%;
+    cursor: pointer; /* Indica que es clickeable */
+    transition: transform 0.3s ease; /* Efecto al pasar el mouse */
+}
+
+.welcome-img:hover {
+    transform: scale(1.05); /* Ligero zoom */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    line-height: 20px;
+    background-color: #fff;
+    color: #272727;
+}
+
+h1, h2, p {
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-image: url("../img/back.jpg");
+    background-size: 120% 120%; /* Tamaño aumentado para animar */
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    background-color: #CCE59D;
+    padding: 25vh 30px;
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    animation: ecoHeaderWave 10s ease-in-out infinite; /* Nueva animación */
+    overflow: hidden; /* Corta lo que se salga */
+    position: relative; /* Ayuda a contener el contenido */
+
+}
+
+/* Animación para el header */
+@keyframes ecoHeaderWave {
+    0% { background-position: 0% 50%; }
+    25% { background-position: 25% 50%; }
+    50% { background-position: 50% 50%; }
+    75% { background-position: 70% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.header__text {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: fit-content;
+    text-align: right;
+    color:antiquewhite;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    animation: fadeInText 2s ease-in; /* Animación de entrada */
+    transition: transform 0.3s ease; /* Para hover */
+    transform-origin: center right; /*Origen del zoom para no salirse */
+    max-width: 90%; /* Limita el ancho para evitar overflow */
+    box-sizing: border-box; /*Incluye padding en el ancho */
+
+
+
+}
+
+.header__text:hover {
+    transform: scale(1.05); /* Zoom suave al hover */
+    color: #0a251c; 
+    text-shadow: 10px 10px 10px rgba(255, 255, 255, 0.9);
+}
+
+.header__text h1::after {
+    content: " 🌍"; /* Agrega ícono al final del h1 */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.header__text:hover h1::after {
+    opacity: 1; /* Ícono aparece al hover */
+}
+
+/* Animación de fade-in */
+@keyframes fadeInText {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+    padding: 0 30px 100px;
+}
+
+.main__title {
+    text-align: center;
+    margin-bottom: 100px;
+}
+
+.list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.list__item a {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: inherit;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 24px;
+    border: 1px solid #EB8028;
+    transition: 0.2s;
+}
+.item__img {
+    object-fit: contain;
+    width: 150px;
+}
+
+.list__item a:hover {
+    box-shadow: 1px 1px 4px 4px #0EB07C;
+}
+
+.main__rez {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.rez__img {
+    object-fit: contain;
+    width: 300px;
+}
+
+.main__title--margin {
+    margin-bottom: 50px;
+}
+
+.main__link {
+    display: inline-block;
+    text-decoration: none;
+    padding: 20px 0;
+    width: 300px;
+    border-radius: 20px;
+    background-color: #0EB07C;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+}
+
+
+.user input {
+    padding: 10px;
+    border: 1px solid #EB8028;
+    background: inherit;
+    border-radius: 5px;
+    font: inherit;
+    width: 100%;
+    color: #EB8028;
+}
+
+.user input:focus,
+.user input:active {
+    border: 1px solid #EB8028;
+    outline: none;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.user-info {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+label {
+    display:inline-block ;
+    margin-bottom: 10px;
+}
+
+.address-date {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.delivery {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button {
+    width: 10%;
+    padding: 10px;
+    min-width: 300px;
+    cursor: pointer;
+    align-self: center;
+    border: none;
+    border-radius: 10px;
+    background: #0EB07C;
+    font: inherit;
+    color: #fff;
+}
+
+/* ESTILOS PARA RADIO BUTTONS Y BOTÓN CALCULAR */
+
+/* Estilos para cada pregunta (agrega espaciado) */
+.question {
+    display: flex;
+    justify-content: space-around; /* Distribuye las opciones con espacio igual */
+    margin-bottom: 40px; /* Espacio entre preguntas */
+}
+
+/* Ocultar los radio buttons reales */
+.question input[type="radio"] {
+    display: none;
+}
+
+/* Estilizar los labels como opciones clickeables */
+.question label {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    color: inherit;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 24px;
+    border: 1px solid #EB8028;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: transparent;
+    text-decoration: none; /* Para que no se vea como enlace */
+}
+
+/* Imagen dentro del label */
+.question label img {
+    object-fit: contain;
+    width: 150px;
+}
+
+/* Efecto hover en los labels */
+.question label:hover {
+    box-shadow: 1px 1px 4px 4px #0EB07C !important;
+    transform: scale(1.05) !important;
+}
+
+/* Estilo para la opción seleccionada (radio button checked) */
+.question label.selected {
+    background-color: #CCE59D !important; /* Color de fondo sutil para indicar selección */
+    border-color: #0EB07C !important; /* Cambia el borde */
+    box-shadow: 1px 1px 4px 4px #0EB07C !important; /* Sombra verde igual al hover */
+    transform: scale(1.05) !important;
+    
+
+}
+
+/* Estilos para el botón "Calcular" */
+#calcular-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif; /* Usa la fuente de la web */
+}
+
+#calcular-btn.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#calcular-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* Espacio extra para el botón en páginas de resultados */
+.main__link {
+    margin-top: 105px; /* Agrega espacio arriba */
+    transition: transform 0.3s ease, color 0.3s ease;
+    animation: gentlePulse 3s infinite;
+}
+
+.main__link:hover {
+    transform: scale(1.05);
+    color: #0a251c; 
+}
+
+@keyframes gentlePulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.9; }
+    100% { opacity: 1; }
+}
+
+/* Estilos para la barra de navegación */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #CCE59D; /* Color ecológico */
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #272727;
+    font-weight: bold;
+    margin: 0 20px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #0EB07C;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* Responsive para móviles */
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+    }
+    .nav-link {
+        margin: 5px 0;
+    }
+}
+
+/* Fondo decorado para la sección de labels */
+.background-decor {
+    background: linear-gradient(45deg, #f0f8e7, #e8f5e8, #dcedc8); /* Gradiente suave ecológico */
+    background-size: 400% 400%; /* Para animación */
+    animation: gradientShift 8s ease infinite; /* Animación de movimiento */
+    padding: 40px 20px;
+    border-radius: 20px;
+    margin: 40px;
+    position: relative;
+}
+
+/* Animación para el fondo decorado */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Estilos para categorías (tamaño original, fondo suave verde) */
+.list.categories {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+  /* Sin padding extra aquí, ya está en .background-decor */
+}
+
+.category-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #272727;
+    background: #CCE59D; /* Fondo suave verde sólido */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: gentleFloat 4s ease-in-out infinite;
+    text-align: center;
+    min-width: 160px;
+    min-height: 135px;
+  /* Sin width para tamaño original */
+}
+
+.category-link:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+.category-link .item__img {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.category-link:hover .item__img {
+    transform: scale(1.1);
+}
+
+.category-link span {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Animación flotante suave */
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .list.categories {
+        flex-direction: column;
+        align-items: center;
+    }
+    .category-link {
+        width: 80%;
+    }
+}
+
+
+/* Animación de hojitas cayendo */
+.leaves-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* No interfiere con clics */
+    overflow: hidden;
+    z-index: 0; /* Detrás del contenido */
+}
+
+.leaf {
+    position: absolute;
+    font-size: 24px; /* Tamaño de la hoja */
+    color: #0EB07C; /* Verde ecológico */
+    animation: fall linear infinite;
+    opacity: 0.7;
+}
+
+.leaf:nth-child(1) { animation-duration: 10s; animation-delay: 0s; left: 10%; }
+.leaf:nth-child(2) { animation-duration: 12s; animation-delay: 2s; left: 20%; }
+.leaf:nth-child(3) { animation-duration: 8s; animation-delay: 4s; left: 30%; }
+.leaf:nth-child(4) { animation-duration: 15s; animation-delay: 1s; left: 40%; }
+.leaf:nth-child(5) { animation-duration: 11s; animation-delay: 3s; left: 50%; }
+.leaf:nth-child(6) { animation-duration: 9s; animation-delay: 5s; left: 60%; }
+.leaf:nth-child(7) { animation-duration: 13s; animation-delay: 0.5s; left: 70%; }
+.leaf:nth-child(8) { animation-duration: 14s; animation-delay: 2.5s; left: 80%; }
+.leaf:nth-child(9) { animation-duration: 10s; animation-delay: 4.5s; left: 90%; }
+.leaf:nth-child(10) { animation-duration: 12s; animation-delay: 1.5s; left: 0%; }
+.leaf:nth-child(11) { animation-duration: 9s; animation-delay: 3.5s; left: 35%; }
+.leaf:nth-child(12) { animation-duration: 11s; animation-delay: 5.5s; left: 75%; }
+.leaf:nth-child(13) { animation-duration: 13s; animation-delay: 2.2s; left: 25%; }
+.leaf:nth-child(14) { animation-duration: 14s; animation-delay: 4.2s; left: 55%; }
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 0;
+    }
+        10% {
+            opacity: 1;
+    }
+        90% {
+            opacity: 1;
+    }
+        100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+    }
+}
+
+/* Responsive: Menos hojas en móviles */
+@media (max-width: 768px) {
+    .leaf:nth-child(n+6) { display: none; } /* Oculta hojas extras */
+}

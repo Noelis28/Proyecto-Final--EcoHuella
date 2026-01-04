@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+<link rel="stylesheet" href="../static/css/style.css">
+<title>EcoHuella - Residuos</title>
+</head>
+<body>
+<header class="header">
+    <div class="header__text">
+    <h1>Descubre tu Huella de Carbono con EcoHuella</h1>
+    <p>¡Calcula, reduce y salva el planeta! Responde preguntas simples sobre tu estilo de vida y obtén consejos personalizados para un futuro sostenible.</p>
+    </div>
+</header>
+
+
+<main>
+    {% block content %}
+    <h2 class="main__title">¿Cómo manejas tus residuos? Selecciona tus hábitos principales</h2>
+    
+    <form id="residuos-form" action="/calcular_residuos" method="POST">
+    <!-- Pregunta 1 -->
+    <h3>¿Usas productos de plástico de un solo uso con frecuencia (botellas, bolsas, envases, etc.)?</h3>
+    <div class="question">
+        <label><input type="radio" name="plastico" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="plastico" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+    </div>
+
+    <!-- Pregunta 2 -->
+    <h3>¿Reciclas tus residuos orgánicos e inorgánicos?</h3>
+    <div class="question">
+        <label><input type="radio" name="reciclar" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="reciclar" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+    </div>
+
+    <!-- Pregunta 3 -->
+    <h3>¿Cuánto plástico tienen, en general, los productos que compras?</h3>
+    <div class="question">
+        <label><input type="radio" name="Poco" value="bajo"><img src="../static/img/plastico_bajo.png" alt="Sí"><span>Poco</span></label>
+        <label><input type="radio" name="Medio" value="medio"><img src="../static/img/plastico_medio.png" alt="No"><span>Medio</span></label>
+        <label><input type="radio" name="Mucho" value="alto"><img src="../static/img/plastico_alto.png" alt="No"><span>Mucho</span></label>
+    </div>
+
+    <!-- Pregunta 4 -->
+    <h3>Estimado de cuántos kg de residuos produces al día</h3>
+    <div class="question">
+        <label><input type="radio" name="kg" value="bajo"><img src="../static/img/kilogramo.png" alt="Bajo"><span>Menos de 1 kg</span></label>
+        <label><input type="radio" name="kg" value="medio"><img src="../static/img/kilogramo.png" alt="Medio"><span>1-2 kg</span></label>
+        <label><input type="radio" name="kg" value="alto"><img src="../static/img/kilogramo.png" alt="Alto"><span>Más de 2 kg</span></label>
+    </div>
+
+    <!-- Pregunta 5 -->
+    <h3>¿Usas bolsas reutilizables al hacer tus compras?</h3>
+    <div class="question">
+        <label><input type="radio" name="bolsas" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="bolsas" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+    </div>
+    </form>
+    {% endblock %}
+</main>
+
+<!-- Botón "Calcular" oculto inicialmente -->
+<button id="calcular-btn" type="submit" form="residuos-form">Calcular</button>
+
+<footer></footer>
+
+<script>
+    // Función para verificar si todas las preguntas están respondidas
+    function checkForm() {
+    const questions = document.querySelectorAll('.question');
+    let allAnswered = true;
+    questions.forEach(q => {
+        const radios = q.querySelectorAll('input[type="radio"]');
+        const checked = Array.from(radios).some(r => r.checked);
+        if (!checked) allAnswered = false;
+    });
+    const btn = document.getElementById('calcular-btn');
+    if (allAnswered) {
+        btn.classList.add('visible');
+    } else {
+        btn.classList.remove('visible');
+    }
+    }
+
+    // Función para manejar la selección persistente
+    function handleSelection() {
+        // Remover 'selected' de todos los labels en la misma pregunta
+        const allLabels = document.querySelectorAll('.question label');
+        allLabels.forEach(label => label.classList.remove('selected'));
+
+        // Agregar 'selected' al label del radio button checked
+        const checkedRadios = document.querySelectorAll('.question input[type="radio"]:checked');
+        checkedRadios.forEach(radio => {
+            const label = radio.closest('label'); // Encuentra el label padre
+            if (label) label.classList.add('selected');
+        });
+    }
+
+    // Agregar event listeners a todos los radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            handleSelection(); // Actualizar selección persistente
+            checkForm(); // Verificar si todas están respondidas
+        });
+    });
+
+    // Verificar al cargar la página
+    window.addEventListener('load', () => {
+        handleSelection(); // Aplicar selección si ya hay algo checked
+        checkForm();
+    });
+
+
+</script>
+</body>
+</html>

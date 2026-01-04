@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>EcoHuella - Modo Educativo</title>
+    <style>
+
+        
+
+        /* Reset global para eliminar márgenes por defecto y el espacio blanco */
+        body {
+            margin: 0; /* Elimina margen por defecto del body */
+            padding: 0; /* Elimina padding por defecto */
+            
+        }
+
+        /* Header: Elimina márgenes para que no haya espacio con main */
+        header {
+            margin-bottom: 0; /* Asegura que no haya margen inferior */
+            padding: 20px; /* Mantén padding interno si lo tenías; ajusta si es necesario */
+            /* Agrega un fondo si quieres que el header fluya con main, ej. background: #f0f8e7; */
+            background: #e3e8f5;
+        }
+
+        main {
+            margin-top: 0;
+            background: #e3e8f5; 
+            min-height: 100vh;
+            
+        }   
+
+
+        /* Estilos adicionales para el modo educativo */
+        .educativo-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente para el marco */
+            border: 3px solid #0EB07C; /* Borde verde para el marco */
+            border-radius: 15px; /* Bordes redondeados para un look suave */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Sombra sutil para resaltar el marco */
+            margin: 20px auto; /* Centrado horizontal con margen */
+            max-width: 1200px; /* Limita el ancho para no ocupar toda la pantalla */
+            position: relative;
+            z-index: 1;
+        }
+        @keyframes backgroundPulse {
+            0%, 100% { background-position: 0 0, 0% 50%; }
+            50% { background-position: 0 0, 100% 50%; }
+        }
+        .educativo-card {
+            background: linear-gradient(135deg, #CCE59D 0%, #0EB07C 100%);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: cardFadeIn 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            z-index: 2;
+            animation: cardFadeIn 1s ease-out forwards, pulse 3s ease-in-out infinite 1s;
+        }
+
+        @keyframes cardFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Keyframe para la animación de pulso */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); } /* Tamaño normal */
+            50% { transform: scale(1.02); } /* Ligero agrandamiento en el medio */
+        }
+
+        .educativo-card:nth-child(1) { animation-delay: 0.2s; }
+        .educativo-card:nth-child(2) { animation-delay: 0.4s; }
+        .educativo-card:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes cardFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .educativo-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        .educativo-card {
+            position: relative;
+            z-index: 2;
+        }
+        .educativo-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        .educativo-title {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .dato-curioso {
+            color: #2c532d;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .explicacion {
+            color: #fff;
+            line-height: 1.6;
+            display: none; /* Oculto por defecto */
+        }
+        .educativo-card.expanded .explicacion {
+            display: block;
+        }
+        .quiz {
+            margin-top: 20px;
+            display: none;
+        }
+        .educativo-card.expanded .quiz {
+            display: block;
+        }
+        .quiz-question {
+            margin-bottom: 10px;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quiz-option {
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .quiz-option:hover {
+            background: #f0f8e7;
+        }
+        .quiz-option.correct {
+            background: #4CAF50;
+            color: #fff;
+        }
+        .quiz-option.incorrect {
+            background: #f44336;
+            color: #fff;
+        }
+        .progress-bar {
+            background: #ddd;
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 20px;
+        }
+        .progress-fill {
+            background: #0EB07C;
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Animación de hojitas cayendo */
+        .leaves-container {
+            position: absolute;
+            top: 450px; /*  Empieza después del header y título */
+            left: 0;
+            width: 100%;
+            height: 100%; /* Cubre todo el main para que caigan hasta abajo */
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+}
+
+        /* Asegura que el container esté encima */
+        .educativo-container {
+            position: relative;
+            z-index: 1; /* Encima de las hojas */
+}
+
+        /* Estilo para el botón "Volver a intentar" */
+        .retry-btn {
+            background: linear-gradient(135deg, #0EB07C 0%, #CCE59D 100%);
+            color: #fff;
+            border: none;
+            padding: 0;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+            opacity: 0;
+            animation: fadeInRetry 1s ease-out forwards;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+        .retry-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+        /* Animación de fade-in para el botón */
+        @keyframes fadeInRetry {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <a href="/" class="nav-link">Inicio</a>
+        <a href="/modo_educativo" class="nav-link">Modo Educativo</a>
+    </nav>
+
+    <header class="header">
+        <div class="header__text">
+            <h1>Modo Educativo - EcoHuella</h1>
+            <p>Aprende sobre hábitos contaminantes y cómo reducir tu huella de carbono con datos curiosos y explicaciones.</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- Contenedor de hojitas -->
+        <div class="leaves-container">
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+            <div class="leaf">🍃</div>
+
+        </div>
+
+
+        <h2 class="main__title">¿Sabías que...? Datos y explicaciones para cuidar el planeta</h2>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="educativo-container">
+            <!-- Sección Transporte -->
+            <div class="educativo-card" onclick="toggleCard(this)">
+                <div class="educativo-icon">🌍</div>
+                <h3 class="educativo-title">Transporte</h3>
+                <p class="dato-curioso">¿Sabías que el transporte es responsable del 14% de las emisiones globales de CO2, principalmente por vehículos a gasolina?</p>
+                <p class="explicacion">Usar carro propio diariamente aumenta tu huella porque quema combustibles fósiles, liberando gases que calientan el planeta. Optar por bici, caminar o transporte público reduce esto drásticamente. Por ejemplo, un viaje en bici no emite CO2, mientras que un carro promedio libera 200g de CO2 por km. ¡Cambia tus hábitos y contribuye a un aire más limpio!</p>
+                <div class="quiz">
+                    <p class="quiz-question" id="question-text"</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" id="option1"></div>
+                        <div class="quiz-option" id="option2"></div>
+                    <div class="quiz-option" id="option3"></div>                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Residuos -->
+            <div class="educativo-card" onclick="toggleCard(this)">
+                <div class="educativo-icon">♻️</div>
+                <h3 class="educativo-title">Residuos</h3>
+                <p class="dato-curioso">¿Sabías que producimos 2.01 mil millones de toneladas de residuos sólidos al año, y solo el 16% se recicla?</p>
+                <p class="explicacion">Productos de plástico de un solo uso, como bolsas y botellas, tardan cientos de años en descomponerse y contaminan océanos, matando vida marina. Generar menos residuos reciclando y usando reutilizables reduce el impacto. Por ejemplo, una bolsa plástica puede durar 500 años, pero una reutilizable ahorra miles de ellas. ¡Separa, recicla y reutiliza para un planeta más verde!</p>
+                <div class="quiz">
+                    <p class="quiz-question" id="question-text"></p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" id="option1"></div>
+                        <div class="quiz-option" id="option2"></div>
+                        <div class="quiz-option" id="option3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Electricidad -->
+            <div class="educativo-card" onclick="toggleCard(this)">
+                <div class="educativo-icon">⚡</div>
+                <h3 class="educativo-title">Electricidad</h3>
+                <p class="dato-curioso">¿Sabías que el consumo de electricidad genera el 25% de las emisiones globales, principalmente por fuentes no renovables como carbón?</p>
+                <p class="explicacion">Dejar aparatos enchufados en standby o usar bombillas tradicionales consume energía innecesaria, contribuyendo al cambio climático. Cambiar a LED y energías renovables reduce esto. Por ejemplo, una bombilla LED usa 75% menos energía que una incandescente. ¡Apaga, ahorra y elige renovables para un futuro sostenible!</p>
+                <div class="quiz">
+                    <p class="quiz-question" id="question-text"></p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" id="option1"></div>
+                        <div class="quiz-option" id="option2"></div>
+                        <div class="quiz-option" id="option3"></div>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="final-message" style="display: none; text-align: center; margin-top: 40px; padding: 20px; background: #CCE59D; border-radius: 10px; font-size: 18px; color: #0EB07C;">
+            <!-- El mensaje se insertará -->
+                <span id="final-message-text"></span>
+                
+            </div>
+
+            <button id="retry-button" class="retry-btn" style="display: none;">Volver a intentar</button>
+
+
+            <a href="/" class="main__link">Volver al inicio</a>
+    </main>
+
+    <footer></footer>
+
+<script>
+    let completedSections = 0;
+    const totalSections = 3;
+    const completedCards = new Set(); // Para rastrear tarjetas completadas
+    let correctAnswers = 0; // Variable para contar respuestas correctas
+    let totalAnswers = 0; // Variable para contar respuestas totales
+
+    // Preguntas por sección (5 por cada una)
+    const questions = {
+        transporte: [
+            { question: "¿Cuál es la opción más ecológica para distancias cortas?", options: ["Caminar o bici", "Carro propio", "Autobús diésel"], correct: 0 },
+            { question: "¿Qué vehículo emite menos CO2?", options: ["Bicicleta", "Carro gasolina", "Moto"], correct: 0 },
+            { question: "¿Cuál es mejor para el medio ambiente?", options: ["Transporte público", "Carro personal", "Taxi"], correct: 0 },
+            { question: "¿Qué reduce la huella de carbono en viajes?", options: ["Carpooling", "Viajar solo", "Usar avión"], correct: 0 },
+            { question: "¿Cuál es el transporte más sostenible?", options: ["Caminar", "Carro eléctrico", "Barco"], correct: 0 }
+        ],
+        residuos: [
+            { question: "¿Qué deberías hacer con residuos orgánicos?", options: ["Compostar", "Tirar a la basura", "Quemar"], correct: 0 },
+            { question: "¿Cuál es mejor para reducir plásticos?", options: ["Bolsas reutilizables", "Bolsas plásticas", "Papel"], correct: 0 },
+            { question: "¿Qué reduce residuos?", options: ["Reciclar", "Comprar empaques grandes", "Tirar todo"], correct: 0 },
+            { question: "¿Cuál es ecológico?", options: ["Productos sin plástico", "Productos desechables", "Envases grandes"], correct: 0 },
+            { question: "¿Qué hacer con vidrio?", options: ["Reciclar", "Tirar", "Quemar"], correct: 0 }
+        ],
+        electricidad: [
+            { question: "¿Qué bombilla ahorra más energía?", options: ["LED", "Incandescente", "Fluorescente"], correct: 0 },
+            { question: "¿Cuál reduce el consumo?", options: ["Apagar aparatos", "Dejar enchufados", "Usar siempre"], correct: 0 },
+            { question: "¿Qué es renovable?", options: ["Solar", "Carbón", "Gasolina"], correct: 0 },
+            { question: "¿Cuál es eficiente?", options: ["Aire acondicionado apagado", "Siempre encendido", "Solo de noche"], correct: 0 },
+            { question: "¿Qué ahorra energía?", options: ["LED en casa", "Luces tradicionales", "Muchas luces"], correct: 0 }
+        ]
+    };
+
+    // Asignar evento al botón de retry una sola vez al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    });
+
+    function toggleCard(card) {
+        card.classList.toggle('expanded');
+        if (card.classList.contains('expanded')) {
+            const section = card.querySelector('.educativo-title').textContent.toLowerCase();
+            if (!completedCards.has(section)) {
+                completedCards.add(section);
+                completedSections++;
+                updateProgress();
+            }
+
+            // Seleccionar pregunta aleatoria
+            const sectionQuestions = questions[section];
+            const randomQuestion = sectionQuestions[Math.floor(Math.random() * sectionQuestions.length)];
+            card.querySelector('#question-text').textContent = randomQuestion.question;
+            card.querySelector('#option1').textContent = randomQuestion.options[0];
+            card.querySelector('#option2').textContent = randomQuestion.options[1];
+            card.querySelector('#option3').textContent = randomQuestion.options[2];
+            // Asignar correct/incorrect dinámicamente
+            const options = card.querySelectorAll('.quiz-option');
+            options.forEach((opt, index) => {
+                opt.onclick = (event) => {
+                    event.stopPropagation(); // Evitar que llegue a la tarjeta y colapse
+                    checkAnswer(opt, index === randomQuestion.correct ? 'correct' : 'incorrect');
+                };
+            });
+        }
+    }     
+    
+
+    function checkAnswer(option, result) {
+        // Quitar clases anteriores
+        option.parentNode.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('correct', 'incorrect'));
+        // Agregar clase según resultado
+        option.classList.add(result);
+        if (result === 'correct') {
+            const section = option.closest('.educativo-card').querySelector('.educativo-title').textContent.toLowerCase();
+            if (!completedCards.has(section + '_answered')) {
+                completedCards.add(section + '_answered');
+                correctAnswers++; // Incrementar si es correcta
+            }
+        }
+        // Incrementar total de respuestas dadas (dentro de la función)
+        totalAnswers++;
+        // Mostrar mensaje final solo cuando se hayan dado 3 respuestas
+        if (totalAnswers === 3) {
+            showFinalMessage();
+        }
+    }
+
+    function updateProgress() {
+        const progress = (completedSections / totalSections) * 100;
+        document.getElementById('progress-fill').style.width = progress + '%';
+    }
+
+    function showFinalMessage() {
+        let message = '';
+        if (correctAnswers === 3) {
+            message = '¡Excelente! Respondiste todas las preguntas correctamente. ¡Eres un experto en sostenibilidad!';
+        } else if (correctAnswers === 2) {
+            message = '¡Bien hecho! Respondiste 2 de 3 preguntas correctamente. ¡Sigue aprendiendo!';
+        } else if (correctAnswers === 1) {
+            message = '¡Buen intento! Respondiste 1 de 3 preguntas correctamente. ¡Practica más para mejorar!';
+        } else {
+            message = '¡Sigue practicando! No respondiste correctamente ninguna pregunta. ¡No te rindas!';
+        }
+        document.getElementById('final-message-text').textContent = message;
+        document.getElementById('final-message').style.display = 'block';
+        document.getElementById('retry-button').style.display = 'inline-block';
+    }
+
+    // Función para reiniciar el quiz
+    function resetQuiz() {
+        // Resetear variables
+        completedSections = 0;
+        correctAnswers = 0;
+        totalAnswers = 0;
+        completedCards.clear(); // Limpiar el set
+
+        // Ocultar mensaje final
+        document.getElementById('final-message').style.display = 'none';
+        document.getElementById('retry-button').style.display = 'none';
+
+        // Resetear barra de progreso
+        document.getElementById('progress-fill').style.width = '0%';
+
+        // Colapsar todas las tarjetas expandidas
+        const cards = document.querySelectorAll('.educativo-card');
+        cards.forEach(card => {
+            card.classList.remove('expanded');
+            // Resetear opciones de quiz (quitar clases correct/incorrect)
+            const options = card.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.classList.remove('correct', 'incorrect'));
+        });
+    }
+</script>
+</body>
+</html>

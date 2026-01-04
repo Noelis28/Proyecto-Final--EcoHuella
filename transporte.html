@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+  >
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>EcoHuella - Transporte</title>
+</head>
+<body>
+  <header class="header">
+    <div class="header__text">
+      <h1>Descubre tu Huella de Carbono con EcoHuella</h1>
+      <p>¡Calcula, reduce y salva el planeta! Responde preguntas simples sobre tu estilo de vida y obtén consejos personalizados para un futuro sostenible.</p>
+    </div>
+  </header>
+  <main>
+    {% block content %}
+    <h2 class="main__title">¿Cómo te desplazas diariamente? Selecciona tu opción principal</h2>
+    
+    
+    <form id="transporte-form" action="/calcular_transporte" method="POST">  <!-- <--  form inicial -->
+      <!-- Pregunta 1 -->
+      <h3>¿Usas bicicleta o caminas para distancias cortas?</h3>
+      <div class="question">
+        <label><input type="radio" name="bicicleta" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="bicicleta" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+      </div>
+
+      <!-- Pregunta 2 -->
+      <h3>¿Usas transporte público (autobús, metro, tren)?</h3>
+      <div class="question">
+        <label><input type="radio" name="publico" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="publico" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+      </div>
+
+      <!-- Pregunta 3 -->
+      <h3>¿Usas carro propio la mayoría de los días?</h3>
+      <div class="question">
+        <label><input type="radio" name="carro" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="carro" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+      </div>
+
+      <!-- Pregunta 4 -->
+      <h3>¿Cuántos km viajas al día en promedio?</h3>
+      <div class="question">
+        <label><input type="radio" name="km" value="bajo"><img src="../static/img/kilometraje.png" alt="Bajo"><span>Menos de 20 km</span></label>
+        <label><input type="radio" name="km" value="medio"><img src="../static/img/kilometraje.png" alt="Medio"><span>20-40 km</span></label>
+        <label><input type="radio" name="km" value="alto"><img src="../static/img/kilometraje.png" alt="Alto"><span>Más de 40 km</span></label>
+      </div>
+
+      <!-- Pregunta 5 -->
+      <h3>¿Compartes viajes (carpooling) para reducir emisiones?</h3>
+      <div class="question">
+        <label><input type="radio" name="carpooling" value="si"><img src="../static/img/si.png" alt="Sí"><span>Sí</span></label>
+        <label><input type="radio" name="carpooling" value="no"><img src="../static/img/no.png" alt="No"><span>No</span></label>
+      </div>
+    </form> 
+    {% endblock %}
+  </main>
+
+  <!-- Botón "Calcular" oculto inicialmente -->
+  <button id="calcular-btn" type="submit" form="transporte-form">Calcular</button>
+
+  <footer></footer>
+
+  <script>
+    // Función para verificar si todas las preguntas están respondidas
+    function checkForm() {
+      const questions = document.querySelectorAll('.question');
+      let allAnswered = true;
+      questions.forEach(q => {
+        const radios = q.querySelectorAll('input[type="radio"]');
+        const checked = Array.from(radios).some(r => r.checked);
+        if (!checked) allAnswered = false;
+      });
+      const btn = document.getElementById('calcular-btn');
+      if (allAnswered) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    }
+
+    // Función para manejar la selección persistente
+    function handleSelection() {
+        // Remover 'selected' de todos los labels en la misma pregunta
+        const allLabels = document.querySelectorAll('.question label');
+        allLabels.forEach(label => label.classList.remove('selected'));
+
+        // Agregar 'selected' al label del radio button checked
+        const checkedRadios = document.querySelectorAll('.question input[type="radio"]:checked');
+        checkedRadios.forEach(radio => {
+            const label = radio.closest('label'); // Encuentra el label padre
+            if (label) label.classList.add('selected');
+        });
+    }
+
+    // Agregar event listeners a todos los radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+          handleSelection(); //actualiza la selección
+          checkForm(); //verifica si todas estan respondidas
+      });
+    });
+
+    // Verificar al cargar la página
+    window.addEventListener('load', () => {
+        handleSelection(); //actualiza la selección
+        checkForm(); //verifica si todas estan respondidas
+    });
+  </script>
+</body>
+</html>
