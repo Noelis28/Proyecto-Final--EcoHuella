@@ -129,7 +129,7 @@ def calcular_residuos():
 def modo_educativo():
     return render_template('modo_educativo.html')
     
-app.run(debug=True)  # inicia el servidor
+
 
 
 
